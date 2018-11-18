@@ -547,7 +547,7 @@ colorize
     # git-all
     
     #   Fast Version Control System
-    git git-core
+    git git-core git-lfs
 
     #   Mercurial is a fast, lightweight source control management system designed for efficient handling of very large istributed projects
     mercurial mercurial-chg mercurial-hgk qct-mercurial trac-mercurial-plugin
