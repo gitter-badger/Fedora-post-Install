@@ -1,5 +1,7 @@
-### PostInstall-Fedora
-
+### Fedora-post-Install
+---
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/d0acfc62dbe84bd591037d6023e4b428)](https://app.codacy.com/app/sensor-dream/Fedora-post-Install?utm_source=github.com&utm_medium=referral&utm_content=sensor-dream/Fedora-post-Install&utm_campaign=Badge_Grade_Dashboard)
+[![GitHub license](https://img.shields.io/github/license/sensor-dream/Fedora-post-Install.svg?style=popout-square)](https://github.com/sensor-dream/Fedora-post-Install/blob/master/LICENSE)
+[![GitHub issues](https://img.shields.io/github/issues/sensor-dream/Fedora-post-Install.svg)](https://github.com/sensor-dream/Fedora-post-Install/issues)
 
-> ```Скрипты настройки после установки чистой системы```
+```Скрипты настройки после установки чистой системы```
