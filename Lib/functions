@@ -251,3 +251,77 @@ function systemctl_activate_service() {
 
 }
 
+#
+#   set_permission -u <$USER - default> -d <$USER - default> -r [no recursion - default] -f <0664 - default> -d <0755 - default> path,file,list path,list file
+#   set_permission -r , приеняется ко всем файлам и дирректориям в текущей папке рекурсивно (вложения). Параметры по умолчанию.
+#
+
+set_permission() {
+
+    local r="";
+    local d="775";
+    local f="664";
+    local u="";
+    local g="";
+
+    while getopts "u:g:f:d:r" OPT
+    do
+        case $OPT in
+            u   ) u="$OPTARG"; ;;
+            g   ) g="$OPTARG"; ;;
+            f   ) f="$OPTARG"; ;;
+            d   ) d="$OPTARG"; ;;
+            r   ) r="-R"; ;;
+            *   ) ;;
+        esac
+    done    
+    shift $(($OPTIND - 1));
+    # shift `expr $OPTIND - 1`
+
+    local ge=$(getent passwd $u 2>/dev/null);
+    if [[ -z "$ge" ]]; then
+        echo "Нет такого пользователя $u";
+        exit $E_OPTERROR
+    fi
+
+    ge=$(getent group $g 2>/dev/null);
+    if [[ -z "$ge" ]]; then
+        echo "Нет такой группы $g";
+        exit $E_OPTERROR
+    fi
+
+    [[ -z "$u" ]] && u="$USER";
+    [[ -z "$g" ]] && g="$u";
+
+    #   $@, $*
+    local list=($@);
+
+    if [[ -z "${list}"  ]]; then
+        list=( $(ls -A) );
+    fi
+
+    for i in ${!list[*]}; do
+        echo "Prepare permission for: ${list[$i]}";
+        if [[ -f "${list[$i]}" &&  "${list[$i]}" != "setperm" && "${list[$i]}" != "setperm.bash" ]]; then
+            ## echo "chown user: $u group: $g file: ${list[$i]}";
+            ## echo "chmod perm file: $f file: ${list[$i]}";
+            chown $u.$g "${list[$i]}";
+            chmod $f "${list[$i]}";
+        elif [[ -d "${list[$i]}" ]]; then
+            ## echo "chown recursion: $r user: $u group: $g path: ${list[$i]}";
+            ## echo "chmod perm file: $f perm path: $d recursion path: ${list[$i]}";
+            chown $r $u.$g "${list[$i]}";
+            if [[ $r == "-R" ]]; then
+                find "${list[$i]}" -type d -exec chmod $d {} \;
+                find "${list[$i]}" -type f -exec chmod $f {} \;
+            else
+                chmod $d "${list[$i]}";
+            fi
+        fi
+    done
+
+    echo "Set permissions is ok";
+
+}
+
+
